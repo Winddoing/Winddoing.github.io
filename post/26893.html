@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><meta name="generator" content="Hexo 3.9.0"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico"><link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico"><link rel="mask-icon" href="/images/logo.svg" color="#222"><meta name="baidu-site-verification" content="WIIeufYjj6"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css"><script id="hexo-configurations">var NexT=window.NexT||{},CONFIG={hostname:new URL("https://winddoing.github.io").hostname,root:"/",scheme:"Mist",version:"7.7.0",exturl:!1,sidebar:{position:"right",width:300,display:"post",padding:18,offset:12,onmobile:!1},copycode:{enable:!0,show_result:!0,style:"flat"},back2top:{enable:!0,sidebar:!1,scrollpercent:!1},bookmark:{enable:!1,color:"#222",save:"auto"},fancybox:!0,mediumzoom:!1,lazyload:!1,pangu:!0,comments:{style:"tabs",active:null,storage:!0,lazyload:!1,nav:null},algolia:{appID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"输入关键词",hits_empty:"没有找到与「${query}」相关的内容",hits_stats:"${hits} 条相关记录，共耗时 ${time} ms"}},localsearch:{enable:!0,trigger:"auto",top_n_per_article:1,unescape:!1,preload:!1},path:"search.xml",motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}}}</script><meta name="description" content="输入输出缓冲区的概念（C++用的多一些） 转载于：http://blog.csdn.net/cxyol/article/details/628324  我想以一个例子说明，比如我想把一篇文章以字符序列的方式输出到计算机显示器屏幕上，那么我的程序内存作为数据源而显示器驱动程序作为数据目标，如果数据源直接对数据目标发送数据的话。数据目标获得第一个字符，便将它显示。然后从端口读取下一个字符，可是这时就不"><meta name="keywords" content="输入输出,getch"><meta property="og:type" content="article"><meta property="og:title" content="getch、getche、getchar的区别和缓冲区的概念"><meta property="og:url" content="https://winddoing.github.io/post/26893.html"><meta property="og:site_name" content="Winddoing&#39;s Notes"><meta property="og:description" content="输入输出缓冲区的概念（C++用的多一些） 转载于：http://blog.csdn.net/cxyol/article/details/628324  我想以一个例子说明，比如我想把一篇文章以字符序列的方式输出到计算机显示器屏幕上，那么我的程序内存作为数据源而显示器驱动程序作为数据目标，如果数据源直接对数据目标发送数据的话。数据目标获得第一个字符，便将它显示。然后从端口读取下一个字符，可是这时就不"><meta property="og:locale" content="zh-CN"><meta property="og:updated_time" content="2021-07-14T09:13:21.845Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="getch、getche、getchar的区别和缓冲区的概念"><meta name="twitter:description" content="输入输出缓冲区的概念（C++用的多一些） 转载于：http://blog.csdn.net/cxyol/article/details/628324  我想以一个例子说明，比如我想把一篇文章以字符序列的方式输出到计算机显示器屏幕上，那么我的程序内存作为数据源而显示器驱动程序作为数据目标，如果数据源直接对数据目标发送数据的话。数据目标获得第一个字符，便将它显示。然后从端口读取下一个字符，可是这时就不"><link rel="canonical" href="https://winddoing.github.io/post/26893.html"><script id="page-configurations">CONFIG.page={sidebar:"",isHome:!1,isPost:!0}</script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>#needsharebutton-postbottom{cursor:pointer;height:26px;margin-top:10px;position:relative}#needsharebutton-postbottom .btn{border:1px solid $btn-default-border-color;border-radius:3px;display:initial;padding:1px 4px}</style><title>getch、getche、getchar的区别和缓冲区的概念 | Winddoing's Notes</title><script>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?38fa95924670925239ef842cb0c8722b";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-header,.use-motion .comments,.use-motion .menu-item,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript></head><body itemscope itemtype="http://schema.org/WebPage"><div class="container use-motion"><div class="headband"></div><header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-container"><div class="site-meta"><div><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Winddoing's Notes</span><span class="logo-line-after"><i></i></span></a></div><h1 class="site-subtitle" itemprop="description">Follow Excellent, Success will Chase you</h1></div><div class="site-nav-toggle"><div class="toggle" aria-label="切换导航栏"><span class="toggle-line toggle-line-first"></span><span class="toggle-line toggle-line-middle"></span><span class="toggle-line toggle-line-last"></span></div></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-fw fa-home"></i> 首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i> 标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i> 分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i> 归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i> 关于</a></li><li class="menu-item menu-item-search"><a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i> 搜索</a></li></ul></nav><div class="site-search"><div class="popup search-popup"><div class="search-header"><span class="search-icon"><i class="fa fa-search"></i></span><div class="search-input-container"> <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input"></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div><div id="search-result"></div></div><div class="search-pop-overlay"></div></div></div></header><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span>0%</span></div><main class="main"><div class="main-inner"><div class="content-wrap"><div class="content"><div class="posts-expand"><article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://winddoing.github.io/post/26893.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/Winddoing.jpg"><meta itemprop="name" content="Winddoing"><meta itemprop="description" content="失败缘于忽视细处，成功始于重视小事。"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Winddoing's Notes"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"> getch、getche、getchar的区别和缓冲区的概念</h2><div class="post-meta"><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建时间：2014-04-23 00:00:00" itemprop="dateCreated datePublished" datetime="2014-04-23T00:00:00+08:00">2014-04-23</time></span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/程序设计/" itemprop="url" rel="index"><span itemprop="name">程序设计</span></a></span></span><span id="/post/26893.html" class="post-meta-item leancloud_visitors" data-flag-title="getch、getche、getchar的区别和缓冲区的概念" title="阅读次数"><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数：</span><span class="leancloud-visitors-count"></span></span><span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display:none"><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数：</span><span id="busuanzi_value_page_pv"></span></span><br><span class="post-meta-item" title="本文字数"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">本文字数：</span> <span>5.2k</span></span><span class="post-meta-item" title="阅读时长"><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span>5 分钟</span></span></div></header><div class="post-body" itemprop="articleBody"><h3 id="输入输出缓冲区的概念（C-用的多一些）"><a href="#输入输出缓冲区的概念（C-用的多一些）" class="headerlink" title="输入输出缓冲区的概念（C++用的多一些）"></a>输入输出缓冲区的概念（C++用的多一些）</h3><ul><li><p>转载于：<a href="http://blog.csdn.net/cxyol/article/details/628324" target="_blank" rel="noopener">http://blog.csdn.net/cxyol/article/details/628324</a></p></li><li><p>我想以一个例子说明，比如我想把一篇文章以字符序列的方式输出到计算机显示器屏幕上，那么我的程序内存作为数据源而显示器驱动程序作为数据目标，如果数据源直接对数据目标发送数据的话。数据目标获得第一个字符，便将它显示。然后从端口读取下一个字符，可是这时就不能保证数据源向端口发送的恰好是第二个字符（也许是第三个，而第二个已经在数据目标显示时发送过了）。这样的话就不能保证输出的数据能完整的被数据目标所接受并处理。</p></li><li><p>为了解决这个问题，我们需要在数据源与数据目标中间放置一个保存完整数据内容的区域，那就是 “缓冲区”。这样的话， 数据源可以不考虑数据目标正在处理哪部分数据，只要把数据输出到缓冲区就可以了，数据目标也可以不考虑数据源的发送频率，只是从缓冲区中依次取出下一个数据。从而保证了数据发送的完整性，同时也提高了程序的效率。</p><a id="more"></a></li><li>当然getch(),getche()没有用到缓冲区。</li></ul><h3 id="几个函数的区别"><a href="#几个函数的区别" class="headerlink" title="几个函数的区别"></a>几个函数的区别</h3><h3 id="getch"><a href="#getch" class="headerlink" title="getch()"></a>getch()</h3><ul><li><p>首先不要忘了，要用getch()必须引入头文件conio.h，以前学C语言的时候，我们总喜欢用在程序的末尾加上它，利用它来实现程序运行完了暂停不退出的效果。如果不加这句话，在TC2.0的环境中我们用Ctrl+F9编译并运行后，程序一运行完了就退回到TC环境中，我们根本来不及看到结果，这时要看结果，我们就要按Alt+F5回到DOS环境中去看结果，这很麻烦。而如果在程序的结尾加上一行getch();语句，我们就可以省掉会DOS看结果这个步骤，因为程序运行完了并不退出，而是在程序最后把屏幕停住了，按任意键才退回到TC环境中去。</p></li><li><p>那我们来看看getch()到底起的什么作用，getch()实际是一个输入命令，<em>作用</em>是从键盘接收一个字符，而且并不把这个字符显示出来，就是说，你按了一个键后它并不在屏幕上显示你按的什么，而继续运行后面的代码，所以我们在C++中可以用它来实现“按任意键继续”的效果，即程序中遇到getch();这行语句，它就会把程序暂停下来，等你按任意键，它接收了这个字符键后再继续执行后面的代码。</p></li><li><p>你也许会问，为什么我们在C++中就没有在程序的末尾加上getch()，解释是，软件总是不断更新的，不好的地方当然要进行改正，getch()加在程序末尾，它又不赋值给任何变量，所以它在这个地方完全是垃圾代码，与程序无关。C++中考虑到这一点，于是在每次程序运行完了并不退出，而是自动把屏幕停下来，并显示“press any key…”叫你按任意键退出，这就好比C++在它的环境中运行程序，在程序的末尾自动加上了一行getch();语句，并且在这行语句前还添加了一行输出语句cout&lt;&lt;”press any key…”;来提示你程序结束了，按任意键继续。</p></li><li><p>实际上我们编译好的程序在程序结束了本身是不会停下来的，我们可以在编译产生的Debug目录中找到这个编译好的应用程序（扩展名exe），在文件夹中双击运行它，你会发现屏幕闪了一下MS-DOS窗口就关闭了，因为程序运行完就自动退出了，回到了windows环境，当然，如果我们在DOS环境中运行这个程序，我们就可以直接在看到DOS屏幕上看到程序运行结果，因为程序运行完后并不清屏。但是，visual stdio.net2003有返回到了tc那样的情况，你必需要有个getch()才行。</p></li></ul><h3 id="getche"><a href="#getche" class="headerlink" title="getche()"></a>getche()</h3><ul><li><p>getche()和getch()很相似，它也需要引入头文件conio.h，那它们之间的区别又在哪里呢？<strong>不同之处就在于getch()无返回显示，getche()有返回显示。</strong>就这么一点看看下面的例子：</p><pre><code>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+void main()
+{
+    char ch;
+    for(int i=0;i&lt;5;i++)
+    {
+        ch=getch();
+        printf(&quot;%c&quot;,ch);
+    }
+}
+</code></pre></li></ul><ul><li><p>首先这是个连续5次的循环来实现5次停顿，等待我们输入，我们编译并运行这个程序，假设我们分别输入abcde，屏幕上显示的结果是abcde，这个abcde并不是在ch=getch();中输出的，我们把printf(“%c”,ch);这行语句去掉，就会发现我们按5次任意键程序就结束了，但屏幕上什么都没有显示。</p></li><li><p>然后我们在把代码中的getch()换成getche()看看有什么不同，我们还是分别输入abcde，这时屏幕上显示的结果是aabbccddee，我们把printf(“%c”,ch);这行语句再去掉看看，显示的结果就是abcde了，说明程序在执行ch=getche();这条语句的时候就把我们输入的键返回显示在屏幕上，<strong>有无回显就是它们的唯一区别。</strong></p></li><li><p>有人会说，既然是C的函数库中的，那么就应该淘汰了，我们还研究它，还用它干嘛？但是我发现还是有用着它的地方，否则我也不会在这里说这么多来耽误大家的时间。我就举个例子吧，程序如下：</p><pre><code>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+void main()
+{
+    char ch=&apos;*&apos;;
+    while(ch==&apos;*&apos;)
+    {
+        printf(&quot;\n按 * 继续循环，按其他键退出！&quot;);
+        ch=getch();
+    }
+    printf(&quot;\n退出程序！&quot;);
+}
+</code></pre></li><li><p>我们可以在这个循环体中添加我们想要的功能，程序中按*继续循环，其他任意键退出，而且利用getch()无回显的特性，我们不管按什么，都不会在屏幕上留下痕迹，使我们的界面达到美观效果，如果还有更好的办法实现这个功能。例子：</p><pre><code>void main()
+{
+    char c, ch;
+    c=getch();     /*从键盘上读入一个字符不回显送给字符变量c*/
+    putchar(c);    /*输出该字符*/
+    ch=getche();   /*从键盘上带回显的读入一个字符送给字符变量ch*/
+    putchar(ch);
+    printf(&quot;/n/n&quot;);
+}
+</code></pre><p><em>值得注意的是前面两个函数都是从键盘读入数据！</em></p></li></ul><h3 id="getchar"><a href="#getchar" class="headerlink" title="getchar()"></a>getchar()</h3><ul><li><p>还有getchar是很值得研究的：getchar()是stdio.h中的库函数，它的作用是从stdin流中读入一个字符，也就是说，如果stdin有数据的话不用输入它就可以直接读取了。而getch()和getche()是conio.h中的库函数，它的<strong>作用</strong>是从键盘接收字符。getchar带有显示。</p></li><li><p>与前面两个函数的区别在于：</p></li></ul><blockquote><p>getchar()函数等待输入直到按回车才结束（前提是缓冲区没有数据），回车前的所有输入字符都会逐个显示在屏幕上。但只有第一个字符作为函数的返回值。</p></blockquote><pre><code>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+void main()
+{
+    char c;
+    c=getchar();   /*从键盘读入字符直到回车结束*/
+           //getchar()在这里它只返回你输入字符串的第一个字符，并把返回值赋值给c
+    putchar(c);    /*显示输入的第一个字符*/
+    printf(&quot;\n\n&quot;);
+}
+</code></pre><ul><li><p>例四：呵呵，这个程序你运行一下，相信你又会有疑问了。这个就是从缓冲区中读取了例子。第一次getchar()时，确实需要人工的输入，但是如果你输了多个字符，以后的getchar()再执行时就会直接从缓冲区中读取了。</p><pre><code>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+void main()
+{
+    char c;
+    while ((c=getchar())!=&apos;\n&apos;)    /*每个getchar()依次读入一个字符*/
+        printf(&quot;%c&quot;,c);        /*按照原样输出*/
+    printf(&quot;\n\n&quot;);
+}
+</code></pre></li><li><p>程序运行时，首先停下来，等你输入一串字符串，<strong>输入完毕后，它把你输入的整个字符串都输出来了</strong>，咦，你不是说getchar()只返回第一个字符么，这里怎么？</p></li><li><p>因为我们输入的字符串并不是取了第一个字符就把剩下的字符串丢掉了，它还在我们的内存中，就好比，开闸放水，我们把水放到闸里去以后，开一次闸就放掉一点，开一次就放掉一点，直到放光了为止，这里开闸动作就相当于调用一次getchar()。我们输入的字符串也是这么一回事，首先我们输入的字符串是放在内存的缓冲区中的，我们调用一次getchar()就把缓冲区中里出口最近的一个字符输出，也就是最前面的一个字符输出，输出后，就把它释放掉了，但后面还有字符串，所以我们就用循环把最前面的一个字符一个个的在内存中释放掉，直到不满足循环条件退出为止。</p></li><li><p>例子中循环条件里的’\n’实际上就是你输入字符串后的回车符，所以意思就是说，直到遇到回车符才结束循环，而getchar()函数就是等待输入（或缓冲区中的数据）直到按回车才结束，所以实现了整个字符串的输出。当然，我们也可以把循环条件改一下，比如while ((c=getchar())!=’a’)，什么意思呢，意思就是遇到字符’a’就停止循环，当然意思是如果你输入“12345a213123\n”那么只会输出到a，结果是12345a。</p></li><li><p>再次<strong>注意</strong>：用getchar()它是从“流”中间去读取，所以第一个getchar()接受的是刚刚中断的流队列中即将出列的第一个字符（不限于回车符，上面举过例子了），如果流队列不为空，执行getchar()就继续放水，直到把回车符也放空为止，空了之后再在执行getchar()就停下等待你的输入了；我们用getch()为什么每次都是等待用户的输入呢？因为getch()是从键盘接收，即时的接收，并不是从stdin流中去读取数据。</p></li><li><p>补充：按键盘上的回车产生了2个字符:回车符(‘\r’)和换行符(‘\n’)。回车符’\r’(CR:carriage return:倒车）使光标回到这行的首部，换行符(‘\n’)(new line)然后再换行。</p></li><li><p><strong>所以当输入字符’w’,并按下回车键以后。首先得到回车符。那个getchar函数结束了。 但是还存在一个换行符。所以如果用getchar()来做判断的时候。最好再写一次getchar()清除缓冲区的’/n’.</strong></p></li></ul><h3 id="如何清空输入缓冲区的内容？"><a href="#如何清空输入缓冲区的内容？" class="headerlink" title="如何清空输入缓冲区的内容？"></a>如何清空输入缓冲区的内容？</h3><ul><li><p>如果我想让getchar()每次都能够等待用户输入的话就要清空缓冲区，下面就介绍方法（不同平台）</p></li><li><p>C标准规定 fflush()函数是用来刷新输出（stdout）缓存的。对于输入（stdin），它是没有定义的。但是有些编译器也定义了 fflush( stdin )的实现，比如微软的VC。其它编译器是否也定义了 fflush( stdin )的实现应当查找它的手册。GCC编译器没有定义它的实现，所以不能使用 fflush( stdin )来刷新输入缓存。</p></li><li><p>对于没有定义 fflush( stdin )的编译器，可以使用 fgets()函数来代替它（比用 getchar()、scanf()等函数通用性好）。可以这样忽略输入流中留下的回车等其它输入，从而使下一次的输入总保持一个“干净”的状态。（这个是任何平台下都可以的）</p><pre><code>// ...
+char sbuf[1024];
+// ...
+fgets( sbuf, 1024, stdin );
+// ...
+</code></pre></li><li><p>在windows 的vc下面就可以这样了</p><pre><code>for(int i=0;i&lt;10;++i)
+{
+       char ch=getchar();
+       fflush(stdin); //每次都会有等待状态了
+}
+</code></pre></li></ul><h3 id="运用实例"><a href="#运用实例" class="headerlink" title="运用实例"></a>运用实例</h3><pre><code>//从键盘输入一些字符，逐个把它们送到磁盘上去，直到输入一个&quot;#&quot;为止
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+void main()
+{
+    FILE *fp;
+    char ch,filename[10];
+    scanf(&quot;%s&quot;,filename);
+    if((fp=fopen(filename,&apos;w&apos;))==NULL)
+    {
+        printf(&quot;cannnot open file\n&quot;);
+        exit(0);   /* 终止程序 */
+    }
+    ch=getchar();   /* 此语句用来接收在执行scanf语句时最后输入的回车符 */
+    ch=getchar( );   /* 接收输入的第一个字符 */
+    while(ch!=&apos;#&apos;)
+    {
+        fputc(ch,fp);
+        putchar(ch);
+        ch=getchar();
+    }
+    putchar(10);  /*向屏幕输出一个换行符 */
+    fclose(fp);
+}
+</code></pre><ul><li>运行情况如下：</li></ul><blockquote><p>file1.c↙ (输入磁盘文件名)<br>computer and c#↙ (输入一个字符串)<br>computer and c (输出一个字符串)</p></blockquote></div><div class="post-widgets"><div id="needsharebutton-postbottom"><span class="btn"><i class="fa fa-share-alt" aria-hidden="true"></i></span></div></div><div><div style="text-align:center;color:#ccc;font-size:14px">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div><div style="text-align:center;color:#ccc;font-size:16px"><script type="text/javascript" src="https://api.imjad.cn/hitokoto/?cat=&charset=utf-8&length=50&encode=js&fun=sync&source="></script><div id="hitokoto"><script>hitokoto()</script></div></div><div class="reward-container"><div></div> <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';"> 打赏</button><div id="qr" style="display:none"><div style="display:inline-block"> <img src="/images/alipay.jpg" alt="Winddoing 支付宝"><p>支付宝</p></div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong> Winddoing</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="https://winddoing.github.io/post/26893.html" title="getch、getche、getchar的区别和缓冲区的概念">https://winddoing.github.io/post/26893.html</a></li><li class="post-copyright-statement"> <strong>作者声明：</strong> 本博文为个人笔记, 由于个人能力有限，难免出现错误，欢迎大家批评指正。</li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/输入输出/" rel="tag"><i class="fa fa-tag"></i> 输入输出</a><a href="/tags/getch/" rel="tag"><i class="fa fa-tag"></i> getch</a></div><div class="post-nav"><div class="post-nav-item"><a href="/post/42179.html" rel="prev" title="动态分配二维数组"><i class="fa fa-chevron-left"></i> 动态分配二维数组</a></div><div class="post-nav-item"> <a href="/post/10189.html" rel="next" title="正则表达式(regular expression) [^,*]与[^,]*区别">正则表达式(regular expression) [^,*]与[^,]*区别<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article></div></div><script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script></div><div class="toggle sidebar-toggle"><span class="toggle-line toggle-line-first"></span><span class="toggle-line toggle-line-middle"></span><span class="toggle-line toggle-line-last"></span></div><aside class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc"> 文章目录</li><li class="sidebar-nav-overview"> 站点概览</li></ul><div class="post-toc-wrap sidebar-panel"><div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#输入输出缓冲区的概念（C-用的多一些）"><span class="nav-number">1.</span> <span class="nav-text">输入输出缓冲区的概念（C++用的多一些）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几个函数的区别"><span class="nav-number">2.</span> <span class="nav-text">几个函数的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getch"><span class="nav-number">3.</span> <span class="nav-text">getch()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getche"><span class="nav-number">4.</span> <span class="nav-text">getche()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#getchar"><span class="nav-number">5.</span> <span class="nav-text">getchar()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何清空输入缓冲区的内容？"><span class="nav-number">6.</span> <span class="nav-text">如何清空输入缓冲区的内容？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运用实例"><span class="nav-number">7.</span> <span class="nav-text">运用实例</span></a></li></ol></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" alt="Winddoing" src="/images/Winddoing.jpg"><p class="site-author-name" itemprop="name">Winddoing</p><div class="site-description" itemprop="description">失败缘于忽视细处，成功始于重视小事。</div></div><div class="site-state-wrap motion-element"><nav class="site-state"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">301</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/"><span class="site-state-item-count">62</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/"><span class="site-state-item-count">245</span> <span class="site-state-item-name">标签</span></a></div></nav></div><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/Winddoing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Winddoing" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a></span><span class="links-of-author-item"><a href="https://gitee.com/winddoing" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;winddoing" rel="noopener" target="_blank"><i class="fa fa-fw fa-codiepie"></i> Gitee</a></span><span class="links-of-author-item"><a href="mailto:winddoing@sina.cn" title="E-Mail → mailto:winddoing@sina.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i> E-Mail</a></span><span class="links-of-author-item"><a href="https://stackoverflow.com/users/9567361/winddoing" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9567361&#x2F;winddoing" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i> StackOverflow</a></span><span class="links-of-author-item"><a href="https://travis-ci.com/Winddoing/Winddoing.github.io" title="Travis CI → https:&#x2F;&#x2F;travis-ci.com&#x2F;Winddoing&#x2F;Winddoing.github.io" rel="noopener" target="_blank"><i class="fa fa-fw fa-terminal"></i> Travis CI</a></span></div><div class="cc-license motion-element" itemprop="license"> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a></div><div class="links-of-blogroll motion-element"><div class="links-of-blogroll-title"><i class="fa fa-fw fa-link"></i> Links</div><ul class="links-of-blogroll-list"><li class="links-of-blogroll-item"> <a href="https://winddoing.gitbooks.io/embedded_notes/content/" title="https:&#x2F;&#x2F;winddoing.gitbooks.io&#x2F;embedded_notes&#x2F;content&#x2F;" rel="noopener" target="_blank">嵌入式相关</a></li><li class="links-of-blogroll-item"> <a href="http://blog.csdn.net/sdreamq" title="http:&#x2F;&#x2F;blog.csdn.net&#x2F;sdreamq" rel="noopener" target="_blank">CSDN</a></li><li class="links-of-blogroll-item"> <a href="http://www.wowotech.net/" title="http:&#x2F;&#x2F;www.wowotech.net&#x2F;" rel="noopener" target="_blank">蜗窝科技</a></li><li class="links-of-blogroll-item"> <a href="https://blog.csdn.net/xiongxianze" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;xiongxianze" rel="noopener" target="_blank">xiongxianze</a></li></ul></div><div id="days"></div><script>function show_date_time(){window.setTimeout("show_date_time()",1e3),BirthDay=new Date("02/26/2014 15:00:00"),today=new Date,timeold=today.getTime()-BirthDay.getTime(),sectimeold=timeold/1e3,secondsold=Math.floor(sectimeold),msPerDay=864e5,e_daysold=timeold/msPerDay,daysold=Math.floor(e_daysold),e_hrsold=24*(e_daysold-daysold),hrsold=setzero(Math.floor(e_hrsold)),e_minsold=60*(e_hrsold-hrsold),minsold=setzero(Math.floor(60*(e_hrsold-hrsold))),seconds=setzero(Math.floor(60*(e_minsold-minsold))),document.getElementById("days").innerHTML="已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒"}function setzero(e){return e<10&&(e="0"+e),e}show_date_time()</script><script type="text/javascript" src="//rf.revolvermaps.com/0/0/5.js?i=5bivipiu0pu&amp;m=8&amp;c=ff0000&amp;cr1=ffffff" async="async"></script></div></div></aside><div id="sidebar-dimmer"></div></div></main><footer class="footer"><div class="footer-inner"><div class="copyright"> &copy; 2014 – <span itemprop="copyrightYear">2021</span><span class="with-love" id="heart"><i class="fa fa-heartbeat"></i></span> <span class="author" itemprop="copyrightHolder">Winddoing</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-area-chart"></i></span> <span title="站点总字数">815k</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-coffee"></i></span> <span title="站点阅读时长">12:21</span></div><div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div> <span class="post-meta-divider">|</span><div class="theme-info">主题 – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.7.0</div><div class="busuanzi-count"><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="post-meta-item" id="busuanzi_container_site_uv" style="display:none"><span class="post-meta-item-icon"><i class="fa fa-user"></i></span><span class="site-uv" title="总访客量"><span id="busuanzi_value_site_uv"></span></span></span> <span class="post-meta-divider">|</span><span class="post-meta-item" id="busuanzi_container_site_pv" style="display:none"><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span><span class="site-pv" title="总访问量"><span id="busuanzi_value_site_pv"></span></span></span></div><div style="display:inline"><script type="text/javascript">var cnzz_protocol="https:"==document.location.protocol?" https://":" http://";document.write(unescape("%3Cspan id='cnzz_stat_icon_1254703532'%3E%3C/span%3E%3Cscript src='"+cnzz_protocol+"s95.cnzz.com/z_stat.php%3Fid%3D1254703532%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"))</script></div><script>
+  function leancloudSelector(url) {
+    url = encodeURI(url);
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.getAttribute('id'));
+      var title = visitors.getAttribute('data-flag-title');
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.getAttribute('id'));
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (let item of results) {
+            let { url, time } = item;
+            leancloudSelector(url).innerText = time;
+          }
+          for (let url of entries) {
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Q8qpjA3fOO7FEUBqcmcQFptF-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Q8qpjA3fOO7FEUBqcmcQFptF-gzGzoHsz',
+            'X-LC-Key': 'tgUTq5bX3fVmn916EMRe65eJ',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script></div></footer></div><script src="/lib/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script><script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script><script src="/lib/velocity/velocity.min.js"></script><script src="/lib/velocity/velocity.ui.min.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script src="/js/local-search.js"></script><script src="//code.tidio.co/cplpkwr9o7xrystu5jnasyygclahnuoj.js"></script><script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes: 0,
+          toolbar: 0,
+          statusbar: 0,
+          pagemode: 'thumbs',
+          view: 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script><script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme: 'forest',
+      logLevel: 3,
+      flowchart: { curve: 'linear' },
+      gantt: { axisFormat: '%m/%d/%Y' },
+      sequence: { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script><script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script><script>pbOptions={iconStyle:"default",boxForm:"horizontal",position:"bottomCenter",networks:"Weibo,Wechat,QQZone,Twitter,Facebook,Evernote"},new needShareButton("#needsharebutton-postbottom",pbOptions)</script></body></html>

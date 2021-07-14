@@ -1,0 +1,283 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><meta name="generator" content="Hexo 3.9.0"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico"><link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico"><link rel="mask-icon" href="/images/logo.svg" color="#222"><meta name="baidu-site-verification" content="WIIeufYjj6"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css"><script id="hexo-configurations">var NexT=window.NexT||{},CONFIG={hostname:new URL("https://winddoing.github.io").hostname,root:"/",scheme:"Mist",version:"7.7.0",exturl:!1,sidebar:{position:"right",width:300,display:"post",padding:18,offset:12,onmobile:!1},copycode:{enable:!0,show_result:!0,style:"flat"},back2top:{enable:!0,sidebar:!1,scrollpercent:!1},bookmark:{enable:!1,color:"#222",save:"auto"},fancybox:!0,mediumzoom:!1,lazyload:!1,pangu:!0,comments:{style:"tabs",active:null,storage:!0,lazyload:!1,nav:null},algolia:{appID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"输入关键词",hits_empty:"没有找到与「${query}」相关的内容",hits_stats:"${hits} 条相关记录，共耗时 ${time} ms"}},localsearch:{enable:!0,trigger:"auto",top_n_per_article:1,unescape:!1,preload:!1},path:"search.xml",motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}}}</script><meta name="description" content="yum安装 YUM是Redhat Linux在线安装更新及软件的工具，但是这是RHEL5的收费功能，如果没有购买Redhat的服务时不能使用RHEL5的更新源的，会提示注册。由于CentOS是从Redhat演化而来的免费Linux版本，因此可以利用CentOS的yum更新源来实现RHEL5的YUM功能。  配置方法如下：检查yum是否安装，默认情况下都是安装好的，总共4各包 [root@local"><meta name="keywords" content="yum,redhat"><meta property="og:type" content="article"><meta property="og:title" content="redhat更新yum源进行软件在线安装"><meta property="og:url" content="https://winddoing.github.io/post/44387.html"><meta property="og:site_name" content="Winddoing&#39;s Notes"><meta property="og:description" content="yum安装 YUM是Redhat Linux在线安装更新及软件的工具，但是这是RHEL5的收费功能，如果没有购买Redhat的服务时不能使用RHEL5的更新源的，会提示注册。由于CentOS是从Redhat演化而来的免费Linux版本，因此可以利用CentOS的yum更新源来实现RHEL5的YUM功能。  配置方法如下：检查yum是否安装，默认情况下都是安装好的，总共4各包 [root@local"><meta property="og:locale" content="zh-CN"><meta property="og:updated_time" content="2021-07-14T09:13:21.845Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="redhat更新yum源进行软件在线安装"><meta name="twitter:description" content="yum安装 YUM是Redhat Linux在线安装更新及软件的工具，但是这是RHEL5的收费功能，如果没有购买Redhat的服务时不能使用RHEL5的更新源的，会提示注册。由于CentOS是从Redhat演化而来的免费Linux版本，因此可以利用CentOS的yum更新源来实现RHEL5的YUM功能。  配置方法如下：检查yum是否安装，默认情况下都是安装好的，总共4各包 [root@local"><link rel="canonical" href="https://winddoing.github.io/post/44387.html"><script id="page-configurations">CONFIG.page={sidebar:"",isHome:!1,isPost:!0}</script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>#needsharebutton-postbottom{cursor:pointer;height:26px;margin-top:10px;position:relative}#needsharebutton-postbottom .btn{border:1px solid $btn-default-border-color;border-radius:3px;display:initial;padding:1px 4px}</style><title>redhat更新yum源进行软件在线安装 | Winddoing's Notes</title><script>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?38fa95924670925239ef842cb0c8722b";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-header,.use-motion .comments,.use-motion .menu-item,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript></head><body itemscope itemtype="http://schema.org/WebPage"><div class="container use-motion"><div class="headband"></div><header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-container"><div class="site-meta"><div><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Winddoing's Notes</span><span class="logo-line-after"><i></i></span></a></div><h1 class="site-subtitle" itemprop="description">Follow Excellent, Success will Chase you</h1></div><div class="site-nav-toggle"><div class="toggle" aria-label="切换导航栏"><span class="toggle-line toggle-line-first"></span><span class="toggle-line toggle-line-middle"></span><span class="toggle-line toggle-line-last"></span></div></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-fw fa-home"></i> 首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i> 标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i> 分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i> 归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i> 关于</a></li><li class="menu-item menu-item-search"><a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i> 搜索</a></li></ul></nav><div class="site-search"><div class="popup search-popup"><div class="search-header"><span class="search-icon"><i class="fa fa-search"></i></span><div class="search-input-container"> <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input"></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div><div id="search-result"></div></div><div class="search-pop-overlay"></div></div></div></header><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span>0%</span></div><main class="main"><div class="main-inner"><div class="content-wrap"><div class="content"><div class="posts-expand"><article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://winddoing.github.io/post/44387.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/Winddoing.jpg"><meta itemprop="name" content="Winddoing"><meta itemprop="description" content="失败缘于忽视细处，成功始于重视小事。"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Winddoing's Notes"></span><header class="post-header"><h2 class="post-title" itemprop="name headline"> redhat更新yum源进行软件在线安装</h2><div class="post-meta"><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建时间：2014-05-23 00:00:00" itemprop="dateCreated datePublished" datetime="2014-05-23T00:00:00+08:00">2014-05-23</time></span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/软件使用/" itemprop="url" rel="index"><span itemprop="name">软件使用</span></a></span></span><span id="/post/44387.html" class="post-meta-item leancloud_visitors" data-flag-title="redhat更新yum源进行软件在线安装" title="阅读次数"><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数：</span><span class="leancloud-visitors-count"></span></span><span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display:none"><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数：</span><span id="busuanzi_value_page_pv"></span></span><br><span class="post-meta-item" title="本文字数"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">本文字数：</span> <span>6.1k</span></span><span class="post-meta-item" title="阅读时长"><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span>6 分钟</span></span></div></header><div class="post-body" itemprop="articleBody"><h3 id="yum安装"><a href="#yum安装" class="headerlink" title="yum安装"></a>yum安装</h3><ul><li><p>YUM是Redhat Linux在线安装更新及软件的工具，但是这是RHEL5的收费功能，如果没有购买Redhat的服务时不能使用RHEL5的更新源的，会提示注册。由于CentOS是从Redhat演化而来的免费Linux版本，因此可以利用CentOS的yum更新源来实现RHEL5的YUM功能。</p></li><li><p>配置方法如下：检查yum是否安装，默认情况下都是安装好的，总共4各包</p><pre><code>[root@localhost /]# rpm -qa |grep yum
+yum-3.2.22-20.el5
+yum-security-1.1.16-13.el5
+yum-metadata-parser-1.1.2-3.el5
+yum-updatesd-0.9-2.el5
+yum-rhn-plugin-0.5.4-13.el5
+</code></pre><a id="more"></a><h3 id="更新yum源"><a href="#更新yum源" class="headerlink" title="更新yum源"></a>更新yum源</h3></li><li><p>修改/etc/yum.conf文件，用下面代码全部覆盖。定义yum更新源，这里使用的是上海交大的CentOS更新源</p><pre><code>[main]
+
+cachedir=/var/cache/yum
+
+keepcache=1
+
+debuglevel=2
+
+logfile=/var/log/yum.log
+
+pkgpolicy=newest
+
+distroverpkg=redhat-release
+
+tolerant=1
+
+exactarch=1
+
+obsoletes=1
+
+gpgcheck=1
+
+plugins=1
+
+[base]
+name=CentOS-5-Base
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever5&amp;arch=$basearch&amp;repo=os
+#baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
+baseurl=http://ftp.sjtu.edu.cn/centos/5/os/$basearch/
+gpgcheck=0
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-centos5
+#released updates
+[update]
+name=CentOS-5-Updates
+#mirrorlist=http://mirrorlist.centos.org/?release=4&amp;arch=$basearch&amp;repo=updates
+baseurl=http://ftp.sjtu.edu.cn/centos/5/updates/$basearch/
+gpgcheck=0
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-centos5
+#packages used/produced in the build but not released
+[addons]
+name=CentOS-5-Addons
+#mirrorlist=http://mirrorlist.centos.org/?release=4&amp;arch=$basearch&amp;repo=addons
+baseurl=http://ftp.sjtu.edu.cn/centos/5/addons/$basearch/
+gpgcheck=0
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-centos5
+#additional packages that may be useful
+[extras]
+name=CentOS-5-Extras
+#mirrorlist=http://mirrorlist.centos.org/?release=4&amp;arch=$basearch&amp;repo=extras
+baseurl=http://ftp.sjtu.edu.cn/centos/5/extras/$basearch/
+gpgcheck=0
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-centos5
+#additional packages that extend functionality of existing packages
+[centosplus]
+name=CentOS-5-Plus
+#mirrorlist=http://mirrorlist.centos.org/?release=4&amp;arch=$basearch&amp;repo=centosplus
+baseurl=http://ftp.sjtu.edu.cn/centos/5/centosplus/$basearch/
+gpgcheck=0
+enabled=0
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-centos5
+#contrib - packages by Centos Users
+[contrib]
+name=CentOS-5-Contrib
+#mirrorlist=http://mirrorlist.centos.org/?release=4&amp;arch=$basearch&amp;repo=contrib
+baseurl=http://ftp.sjtu.edu.cn/centos/5/contrib/$basearch/
+gpgcheck=0
+enabled=0
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-centos5
+# vi dag.repo
+[dag]
+name=Dag RPM Repository for RHEL5
+baseurl=http://ftp.riken.jp/Linux/dag/redhat/el5/en/$basearch/dag/
+enabled=1
+gpgcheck=0
+gpgkey=http://ftp.riken.jp/Linux/dag/packages/RPM-GPG-KEY.dag.txt]
+</code></pre></li><li><p>修改yum.conf配置文件中[main]部分的参数详细说明如下：</p></li></ul><pre><code>[main] //main开头的块用于对客户端进行配置，在main后也可以指定yum源（不推荐这样做），与/etc/yum.repo.d中指定yum源相同
+
+cachedir=/var/cache/yum
+#cachedir：yum更新软件时的缓存目录，默认设置为/var/cache/yum
+keepcache=[1 or 0]
+
+#设置 keepcache=1，yum 在成功安装软件包之后保留缓存的头文件 (headers) 和软件包。默认值为 keepcache=0 不保存
+
+debuglevel=2
+#debuglevel：Debug信息输出等级，范围为0-10，缺省为2
+logfile=/var/log/yum.log
+#logfile：存放系统更新软件的日志的目录。用户可以到/var/log/yum.log文件去查询自己在过去的日子里都做了哪些更新。
+pkgpolicy=newest
+#包的策略。一共有两个选项，newest和last，这个作用是如果你设置了多个repository，而同一软件在不同的repository中同时存在，yum应该安装哪一个，如果是newest，则yum会安装最新的那个版本。如果是last，则yum会将服务器id以字母表排序，并选择最后的那个服务器上的软件安装。一般都是选newest。
+distroverpkg=redhat-release
+#指定一个软件包，yum会根据这个包判断你的发行版本，默认是redhat-release，也可以是安装的任何针对自己发行版的rpm包。
+tolerant=1
+#如果值为1，则yum会忽略任何的有关包的错误。举例来说，当执行yum来安装baz时，如果baz包已经安装在系统中了，则yum会继续重复安装baz，而不会报错。默认值为1。
+exactarch=1
+#设置为1，则yum只会安装和系统架构匹配的软件包，例如，yum不会将i686的软件包安装在适合i386的系统中。默认为1
+retries=20
+#网络连接发生错误后的重试次数，如果设为0，则会无限重试。默认值为6
+obsoletes=1
+#此选项在进行发行版跨版本升级的时候会用到。
+gpgcheck=1
+#有1和0两个选择，分别代表是否是否进行gpg校验。这个选项如果设置在[main]部分，则对每个repository都有效。默认值为0.
+plugins = 1 //是否启用插件，默认1为允许，0表示不允许
+</code></pre><ul><li><p>修改完yum.conf文件，使用下列命令进行配置。</p><pre><code>yum clean all    清楚缓存
+yum makecache    更新生成缓存
+</code></pre></li></ul><h3 id="使用yum安装软件"><a href="#使用yum安装软件" class="headerlink" title="使用yum安装软件"></a>使用yum安装软件</h3><h3 id="1-用YUM安装删除软件"><a href="#1-用YUM安装删除软件" class="headerlink" title="1. 用YUM安装删除软件"></a>1. 用YUM安装删除软件</h3><ul><li><p>注：Yum（ Yellow dog Updater, Modified）是一个在Fedora和RedHat以及SUSE中的Shell前端软件包管理器。基于RPM包管理，能够从指定的服务器自动下载RPM包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软体包，无须繁琐地一次次下载、安装。</p></li><li><p>在系统中添加删除软件是常事，yum同样可以胜任这一任务，只要软件是rpm安装的。安装的命令是，yum install xxx，yum会查询数据库，有无这一软件包，如果有，则检查其依赖冲突关系，如果没有依赖冲突，那么最好，下载安装;如果有，则会给出提示，询问是否要同时安装依赖，或删除冲突的包，你可以自己作出判断。删除的命令是，yum remove xxx，同安装一样，yum也会查询数据库，给出解决依赖关系的提示。</p></li></ul><ul><li><p>用YUM安装软件包命令：</p><pre><code>yum install xxx
+</code></pre></li><li><p>用YUM删除软件包命令：</p><p> yum remove xxx</p></li></ul><h3 id="2-用YUM查询软件信息"><a href="#2-用YUM查询软件信息" class="headerlink" title="2. 用YUM查询软件信息"></a>2. 用YUM查询软件信息</h3><ul><li>我们常会碰到这样的情况，想要安装一个软件，只知道它和某方面有关，但又不能确切知道它的名字。这时yum的查询功能就起作用了。<br>你可以用 yum search keyword这样的命令来进行搜索，比如我们要则安装一个Instant Messenger,但又不知到底有哪些，这时不妨用yum search messenger这样的指令进行搜索，yum会搜索所有可用rpm的描述，列出所有描述中和messeger有关的rpm包，于是我们可能得到gaim,kopete等等，并从中选择。有时我们还会碰到安装了一个包，但又不知道其用途，我们可以用yum info packagename这个指令来获取信息。</li></ul><p>　　使用YUM查找软件包命令：</p><pre><code>yum search
+</code></pre><p>　　列出所有可安装的软件包命令：</p><pre><code>yum list
+</code></pre><p>　　列出所有可更新的软件包命令：</p><pre><code>yum list updates
+</code></pre><p>　　列出所有已安装的软件包命令：</p><pre><code>yum list installed
+</code></pre><p>　　列出所有已安装但不在 Yum Repository 内的软件包命令：</p><pre><code>yum list extras
+</code></pre><p>　　列出所指定的软件包命令：</p><pre><code>yum list
+</code></pre><h3 id="Ubuntu中的高级包管理方法apt-get"><a href="#Ubuntu中的高级包管理方法apt-get" class="headerlink" title="Ubuntu中的高级包管理方法apt-get"></a>Ubuntu中的高级包管理方法apt-get</h3><ul><li>apt-get的一大好处是极大地减小了所谓依赖关系恶梦的发生几率(dependency hell)，即使是陷入了dependency hell,apt-get也提供了很好的援助手段。通常 apt-get 都和网上的压缩包一起出没，从互联网上下载或是安装。</li></ul><h3 id="apt方式安装："><a href="#apt方式安装：" class="headerlink" title="apt方式安装："></a>apt方式安装：</h3><ol><li>打开一个终端，su -成root用户；</li><li>apt-cache search soft 注：soft是您要找的软件的名称或相关信息</li><li>假如2中找到了软件soft.version，则用apt-get install soft.version命令安装软件 注：只要您能够上网，只需要用apt-cache search查找软件，用apt-get install软件</li></ol><ul><li><p>常用的APT命令参数</p><pre><code>apt-cache search package 搜索包
+apt-cache show package 获取包的相关信息，如说明、大小、版本等
+sudo apt-get install package 安装包
+sudo apt-get install package - - reinstall 重新安装包
+sudo apt-get -f install 修复安装&quot;-f = --fix-missing&quot;
+sudo apt-get remove package 删除包
+sudo apt-get remove package - - purge 删除包，包括删除配置文件等
+sudo apt-get update 更新源sudo apt-get upgrade 更新已安装的包
+sudo apt-get dist-upgrade 升级系统
+sudo apt-get dselect-upgrade 使用 dselect 升级
+apt-cache depends package 了解使用依赖
+apt-cache rdepends package 是查看该包被哪些包依赖
+sudo apt-get build-dep package 安装相关的编译环境
+apt-get source package 下载该包的源代码
+sudo apt-get clean &amp;&amp; sudo apt-get autoclean 清理无用的包
+sudo apt-get check 检查是否有损坏的依赖
+</code></pre></li></ul><h2 id="其他软件安装技巧"><a href="#其他软件安装技巧" class="headerlink" title="其他软件安装技巧"></a>其他软件安装技巧</h2><h3 id="1-linux下安装软件，如何知道软件安装位置"><a href="#1-linux下安装软件，如何知道软件安装位置" class="headerlink" title="1. linux下安装软件，如何知道软件安装位置"></a>1. linux下安装软件，如何知道软件安装位置</h3><blockquote><p>注：一般的软件的默认安装目录在/usr/local或者/opt里，可以到那里去找找.</p></blockquote><ul><li><p>指令名称：whereis</p></li><li><p>功能介绍：在特定目录中查找符合条件的文件。这些文件的烈性应属于原始代码，二进制文件，或是帮助文件。</p></li><li><p>语法格式：whereis [-bfmsu][-B &lt;目录&gt;…][-M &lt;目录&gt;…][-S &lt;目录&gt;…][文件…]</p></li><li><p>常用参数说明：</p></li></ul><p>　-b 　只查找二进制文件。<br>　-B &lt;目录&gt; 　只在设置的目录下查找二进制文件。<br>　-f 　不显示文件名前的路径名称。<br>　-m 　只查找说明文件。<br>　-M &lt;目录&gt; 　只在设置的目录下查找说明文件。<br>　-s 　只查找原始代码文件。<br>　-S &lt;目录&gt; 　只在设置的目录下查找原始代码文件。<br>　-u 　查找不包含指定类型的文件。</p><ul><li>应用：#whereis 软件名 –&gt;查看软件安装路径</li><li>#which 软件名 –&gt;软件软件的运行路径</li></ul><h3 id="2-通过rpm包管理器安装的软件："><a href="#2-通过rpm包管理器安装的软件：" class="headerlink" title="2. 通过rpm包管理器安装的软件："></a>2. 通过rpm包管理器安装的软件：</h3><ul><li>rpm包</li></ul><ul><li><p>可以用命令：</p><pre><code>#rpm –ql 包名           如 rpm -ql gcc 来查看gcc的文件都安装到哪里去了
+#rpm -qa | grep 包名   来查看有没有安装这个包 ，
+#rpm -qa              查看全部已经安装的包名
+</code></pre></li></ul><ul><li>deb包</li></ul><ul><li><p>可以用命令：</p><pre><code>#dpkg -L 包名 查看如 dpkg -L gcc 来查看gcc的文件。
+#dpkg -l | grep 包名  来查看有没有安装某个包 ，
+# dpkg -l            是查看全部包的
+</code></pre></li></ul><h2 id="其他更多软件安装方法技巧"><a href="#其他更多软件安装方法技巧" class="headerlink" title="其他更多软件安装方法技巧"></a>其他更多软件安装方法技巧</h2><blockquote><p>参考[<a href="http://blog.chinaunix.net/uid-28769209-id-4257451.html]:http://blog.chinaunix.net/uid-28769209-id-4257451.html" target="_blank" rel="noopener">http://blog.chinaunix.net/uid-28769209-id-4257451.html]:http://blog.chinaunix.net/uid-28769209-id-4257451.html</a></p></blockquote></div><div class="post-widgets"><div id="needsharebutton-postbottom"><span class="btn"><i class="fa fa-share-alt" aria-hidden="true"></i></span></div></div><div><div style="text-align:center;color:#ccc;font-size:14px">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div><div style="text-align:center;color:#ccc;font-size:16px"><script type="text/javascript" src="https://api.imjad.cn/hitokoto/?cat=&charset=utf-8&length=50&encode=js&fun=sync&source="></script><div id="hitokoto"><script>hitokoto()</script></div></div><div class="reward-container"><div></div> <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';"> 打赏</button><div id="qr" style="display:none"><div style="display:inline-block"> <img src="/images/alipay.jpg" alt="Winddoing 支付宝"><p>支付宝</p></div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong> Winddoing</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="https://winddoing.github.io/post/44387.html" title="redhat更新yum源进行软件在线安装">https://winddoing.github.io/post/44387.html</a></li><li class="post-copyright-statement"> <strong>作者声明：</strong> 本博文为个人笔记, 由于个人能力有限，难免出现错误，欢迎大家批评指正。</li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/yum/" rel="tag"><i class="fa fa-tag"></i> yum</a><a href="/tags/redhat/" rel="tag"><i class="fa fa-tag"></i> redhat</a></div><div class="post-nav"><div class="post-nav-item"><a href="/post/3878.html" rel="prev" title="单片机延时函数简单分析"><i class="fa fa-chevron-left"></i> 单片机延时函数简单分析</a></div><div class="post-nav-item"> <a href="/post/20021.html" rel="next" title="很久没有更新过了">很久没有更新过了<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article></div></div><script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script></div><div class="toggle sidebar-toggle"><span class="toggle-line toggle-line-first"></span><span class="toggle-line toggle-line-middle"></span><span class="toggle-line toggle-line-last"></span></div><aside class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc"> 文章目录</li><li class="sidebar-nav-overview"> 站点概览</li></ul><div class="post-toc-wrap sidebar-panel"><div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#yum安装"><span class="nav-number">1.</span> <span class="nav-text">yum安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新yum源"><span class="nav-number">2.</span> <span class="nav-text">更新yum源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用yum安装软件"><span class="nav-number">3.</span> <span class="nav-text">使用yum安装软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-用YUM安装删除软件"><span class="nav-number">4.</span> <span class="nav-text">1. 用YUM安装删除软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-用YUM查询软件信息"><span class="nav-number">5.</span> <span class="nav-text">2. 用YUM查询软件信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ubuntu中的高级包管理方法apt-get"><span class="nav-number">6.</span> <span class="nav-text">Ubuntu中的高级包管理方法apt-get</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apt方式安装："><span class="nav-number">7.</span> <span class="nav-text">apt方式安装：</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#其他软件安装技巧"><span class="nav-number"></span> <span class="nav-text">其他软件安装技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-linux下安装软件，如何知道软件安装位置"><span class="nav-number">1.</span> <span class="nav-text">1. linux下安装软件，如何知道软件安装位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-通过rpm包管理器安装的软件："><span class="nav-number">2.</span> <span class="nav-text">2. 通过rpm包管理器安装的软件：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他更多软件安装方法技巧"><span class="nav-number"></span> <span class="nav-text">其他更多软件安装方法技巧</span></a></li></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" alt="Winddoing" src="/images/Winddoing.jpg"><p class="site-author-name" itemprop="name">Winddoing</p><div class="site-description" itemprop="description">失败缘于忽视细处，成功始于重视小事。</div></div><div class="site-state-wrap motion-element"><nav class="site-state"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">301</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/"><span class="site-state-item-count">62</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/"><span class="site-state-item-count">245</span> <span class="site-state-item-name">标签</span></a></div></nav></div><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/Winddoing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Winddoing" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a></span><span class="links-of-author-item"><a href="https://gitee.com/winddoing" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;winddoing" rel="noopener" target="_blank"><i class="fa fa-fw fa-codiepie"></i> Gitee</a></span><span class="links-of-author-item"><a href="mailto:winddoing@sina.cn" title="E-Mail → mailto:winddoing@sina.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i> E-Mail</a></span><span class="links-of-author-item"><a href="https://stackoverflow.com/users/9567361/winddoing" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;9567361&#x2F;winddoing" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i> StackOverflow</a></span><span class="links-of-author-item"><a href="https://travis-ci.com/Winddoing/Winddoing.github.io" title="Travis CI → https:&#x2F;&#x2F;travis-ci.com&#x2F;Winddoing&#x2F;Winddoing.github.io" rel="noopener" target="_blank"><i class="fa fa-fw fa-terminal"></i> Travis CI</a></span></div><div class="cc-license motion-element" itemprop="license"> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a></div><div class="links-of-blogroll motion-element"><div class="links-of-blogroll-title"><i class="fa fa-fw fa-link"></i> Links</div><ul class="links-of-blogroll-list"><li class="links-of-blogroll-item"> <a href="https://winddoing.gitbooks.io/embedded_notes/content/" title="https:&#x2F;&#x2F;winddoing.gitbooks.io&#x2F;embedded_notes&#x2F;content&#x2F;" rel="noopener" target="_blank">嵌入式相关</a></li><li class="links-of-blogroll-item"> <a href="http://blog.csdn.net/sdreamq" title="http:&#x2F;&#x2F;blog.csdn.net&#x2F;sdreamq" rel="noopener" target="_blank">CSDN</a></li><li class="links-of-blogroll-item"> <a href="http://www.wowotech.net/" title="http:&#x2F;&#x2F;www.wowotech.net&#x2F;" rel="noopener" target="_blank">蜗窝科技</a></li><li class="links-of-blogroll-item"> <a href="https://blog.csdn.net/xiongxianze" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;xiongxianze" rel="noopener" target="_blank">xiongxianze</a></li></ul></div><div id="days"></div><script>function show_date_time(){window.setTimeout("show_date_time()",1e3),BirthDay=new Date("02/26/2014 15:00:00"),today=new Date,timeold=today.getTime()-BirthDay.getTime(),sectimeold=timeold/1e3,secondsold=Math.floor(sectimeold),msPerDay=864e5,e_daysold=timeold/msPerDay,daysold=Math.floor(e_daysold),e_hrsold=24*(e_daysold-daysold),hrsold=setzero(Math.floor(e_hrsold)),e_minsold=60*(e_hrsold-hrsold),minsold=setzero(Math.floor(60*(e_hrsold-hrsold))),seconds=setzero(Math.floor(60*(e_minsold-minsold))),document.getElementById("days").innerHTML="已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒"}function setzero(e){return e<10&&(e="0"+e),e}show_date_time()</script><script type="text/javascript" src="//rf.revolvermaps.com/0/0/5.js?i=5bivipiu0pu&amp;m=8&amp;c=ff0000&amp;cr1=ffffff" async="async"></script></div></div></aside><div id="sidebar-dimmer"></div></div></main><footer class="footer"><div class="footer-inner"><div class="copyright"> &copy; 2014 – <span itemprop="copyrightYear">2021</span><span class="with-love" id="heart"><i class="fa fa-heartbeat"></i></span> <span class="author" itemprop="copyrightHolder">Winddoing</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-area-chart"></i></span> <span title="站点总字数">815k</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-coffee"></i></span> <span title="站点阅读时长">12:21</span></div><div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div> <span class="post-meta-divider">|</span><div class="theme-info">主题 – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.7.0</div><div class="busuanzi-count"><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="post-meta-item" id="busuanzi_container_site_uv" style="display:none"><span class="post-meta-item-icon"><i class="fa fa-user"></i></span><span class="site-uv" title="总访客量"><span id="busuanzi_value_site_uv"></span></span></span> <span class="post-meta-divider">|</span><span class="post-meta-item" id="busuanzi_container_site_pv" style="display:none"><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span><span class="site-pv" title="总访问量"><span id="busuanzi_value_site_pv"></span></span></span></div><div style="display:inline"><script type="text/javascript">var cnzz_protocol="https:"==document.location.protocol?" https://":" http://";document.write(unescape("%3Cspan id='cnzz_stat_icon_1254703532'%3E%3C/span%3E%3Cscript src='"+cnzz_protocol+"s95.cnzz.com/z_stat.php%3Fid%3D1254703532%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"))</script></div><script>
+  function leancloudSelector(url) {
+    url = encodeURI(url);
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.getAttribute('id'));
+      var title = visitors.getAttribute('data-flag-title');
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.getAttribute('id'));
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (let item of results) {
+            let { url, time } = item;
+            leancloudSelector(url).innerText = time;
+          }
+          for (let url of entries) {
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Q8qpjA3fOO7FEUBqcmcQFptF-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Q8qpjA3fOO7FEUBqcmcQFptF-gzGzoHsz',
+            'X-LC-Key': 'tgUTq5bX3fVmn916EMRe65eJ',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script></div></footer></div><script src="/lib/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script><script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script><script src="/lib/velocity/velocity.min.js"></script><script src="/lib/velocity/velocity.ui.min.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script src="/js/local-search.js"></script><script src="//code.tidio.co/cplpkwr9o7xrystu5jnasyygclahnuoj.js"></script><script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes: 0,
+          toolbar: 0,
+          statusbar: 0,
+          pagemode: 'thumbs',
+          view: 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script><script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme: 'forest',
+      logLevel: 3,
+      flowchart: { curve: 'linear' },
+      gantt: { axisFormat: '%m/%d/%Y' },
+      sequence: { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script><script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script><script>pbOptions={iconStyle:"default",boxForm:"horizontal",position:"bottomCenter",networks:"Weibo,Wechat,QQZone,Twitter,Facebook,Evernote"},new needShareButton("#needsharebutton-postbottom",pbOptions)</script></body></html>
